@@ -8,14 +8,14 @@ using System.Windows.Threading;
 namespace PrismContextAware.Services
 {
     /// <summary>
-    /// View aware service that provides the following Events. Where we are specifically
+    /// Window aware service that provides the following Events. Where we are specifically
     /// targetting a Window type. As such this is only available for WPF
-    ///    ViewLoaded / ViewUnloaded
-    ///    ViewActivated / ViewDeactivated
-    ///    ViewWindowClosed / ViewWindowContentRendered / 
-    ///    ViewWindowLocationChanged / ViewWindowStateChanged
-    /// 3. Views current Dispatcher
-    /// 4. If the view implements <c>IViewCreationContextProvider</c>
+    ///    Loaded / Unloaded
+    ///    Activated / Deactivated
+    ///    WindowClosed / WindowContentRendered / 
+    ///    WindowLocationChanged / WindowStateChanged
+    /// 3. Windows current Dispatcher
+    /// 4. If the window implements <c>IViewCreationContextProvider</c>
     ///    the current Views Context will also be available to allow
     ///    the ViewModel to obtain some view specific contextual information
     /// </summary>
@@ -146,17 +146,17 @@ namespace PrismContextAware.Services
 
         public Dispatcher Dispatcher { get; private set; }
 
-        public object View { get { return _weakInstance.Target; } }
+        public object Context { get { return _weakInstance.Target; } }
 
         #endregion
 
         #region IContextAware Members
 
-        public void InjectContext(object view)
+        public void InjectContext(object context)
         {
             if (_weakInstance != null)
             {
-                if (_weakInstance.Target == view)
+                if (_weakInstance.Target == context)
                 {
                     return;
                 }
@@ -186,7 +186,7 @@ namespace PrismContextAware.Services
 
             }
 
-            if (view is FrameworkElement x)
+            if (context is FrameworkElement x)
             {
                 x.Loaded += OnViewLoaded;
                 x.Unloaded += OnViewUnloaded;

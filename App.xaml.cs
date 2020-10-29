@@ -36,7 +36,7 @@ namespace PrismContextAware
                 string viewModelName = string.Format(CultureInfo.InvariantCulture, "{0}{1}, {2}", viewName, suffix, viewAssemblyName);
                 return Type.GetType(viewModelName);
             });
-
+            
             ViewModelLocationProvider.SetDefaultViewModelFactory((view, type) =>
             {
                 object vm = ContainerLocator.Container.Resolve(type);
@@ -53,7 +53,7 @@ namespace PrismContextAware
                 {
                     WindowAwareStatusService service = new WindowAwareStatusService();
                     service.InjectContext(view);
-                    contextWindowModel.InitialiseViewAwareService(service);
+                    contextWindowModel.InitialiseWindowAwareService(service);
                     return vm;
                 }
 

@@ -6,5 +6,7 @@
     public interface IContextAware
     {
         void InjectContext(object context);
+
+        object Context { get; }
     }
 }

@@ -2,6 +2,6 @@
 {
     public interface IWindowAwareStatusInjectionAware
     {
-        void InitialiseViewAwareService(IWindowAwareStatus window);
+        void InitialiseWindowAwareService(IWindowAwareStatus window);
     }
 }

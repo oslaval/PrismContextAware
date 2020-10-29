@@ -11,7 +11,7 @@ namespace PrismContextAware
 
         }
 
-        public void InitialiseViewAwareService(IWindowAwareStatus window)
+        public void InitialiseWindowAwareService(IWindowAwareStatus window)
         {
             window.WindowClosing += Window_WindowClosing;
         }

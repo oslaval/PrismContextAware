@@ -5,18 +5,11 @@ namespace PrismContextAware.Services.Contracts
 {
     public interface IViewAwareStatus : IContextAware
     {
-        event Action ViewLoaded;
-        event Action ViewUnloaded;
+        Dispatcher Dispatcher { get; }
 
-#if !SILVERLIGHT
-
-        event Action ViewActivated;
-        event Action ViewDeactivated;
-#else
-        void PerformCleanUp();
-#endif
-
-        Dispatcher ViewsDispatcher { get; }
-        Object View { get; }
+        event Action Loaded;
+        event Action Unloaded;
+        event Action Activated;
+        event Action Deactivated;
     }
 }

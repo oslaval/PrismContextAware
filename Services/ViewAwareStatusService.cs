@@ -8,8 +8,8 @@ namespace PrismContextAware.Services
 {
     /// <summary>
     /// View aware service that provides the following
-    /// 1. Events for ViewLoaded / ViewUnloaded (WPF and SL)
-    /// 2. Events for ViewActivated / ViewDeactivated (WPF Only)
+    /// 1. Events for Loaded / Unloaded
+    /// 2. Events for Activated / Deactivated
     /// 3. Views current Dispatcher
     /// 4. If the view implements <c>IViewCreationContextProvider</c>
     ///    the current Views Context will also be available to allow
@@ -17,7 +17,6 @@ namespace PrismContextAware.Services
     /// </summary>
     public class ViewAwareStatusService : IViewAwareStatus
     {
-
         #region Data
         private WeakReference _weakViewInstance;
         #endregion
@@ -25,7 +24,7 @@ namespace PrismContextAware.Services
         #region IViewAwareStatus Members
 
         private readonly IList<WeakAction> _loadedHandlers = new List<WeakAction>();
-        public event Action ViewLoaded
+        public event Action Loaded
         {
             add
             {
@@ -38,7 +37,7 @@ namespace PrismContextAware.Services
         }
 
         private readonly IList<WeakAction> _unloadedHandlers = new List<WeakAction>();
-        public event Action ViewUnloaded
+        public event Action Unloaded
         {
             add
             {
@@ -51,7 +50,7 @@ namespace PrismContextAware.Services
         }
 
         private readonly IList<WeakAction> _activatedHandlers = new List<WeakAction>();
-        public event Action ViewActivated
+        public event Action Activated
         {
             add
             {
@@ -64,7 +63,7 @@ namespace PrismContextAware.Services
         }
 
         private readonly IList<WeakAction> _deactivatedHandlers = new List<WeakAction>();
-        public event Action ViewDeactivated
+        public event Action Deactivated
         {
             add
             {
@@ -76,19 +75,19 @@ namespace PrismContextAware.Services
             }
         }
 
-        public Dispatcher ViewsDispatcher { get; private set; }
+        public Dispatcher Dispatcher { get; private set; }
 
-        public object View { get { return _weakViewInstance.Target; } }
+        public object Context { get { return _weakViewInstance.Target; } }
 
         #endregion
 
         #region IContextAware Members
 
-        public void InjectContext(object view)
+        public void InjectContext(object context)
         {
             if (_weakViewInstance != null)
             {
-                if (_weakViewInstance.Target == view)
+                if (_weakViewInstance.Target == context)
                 {
                     return;
                 }
@@ -113,7 +112,7 @@ namespace PrismContextAware.Services
 
             }
 
-            if (view is FrameworkElement x)
+            if (context is FrameworkElement x)
             {
                 x.Loaded += OnViewLoaded;
                 x.Unloaded += OnViewUnloaded;
@@ -125,7 +124,7 @@ namespace PrismContextAware.Services
                 }
 
                 //get the Views Dispatcher
-                ViewsDispatcher = x.Dispatcher;
+                Dispatcher = x.Dispatcher;
                 _weakViewInstance = new WeakReference(x);
 
             }
