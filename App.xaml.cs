@@ -1,5 +1,7 @@
 ﻿using Prism.Ioc;
 using Prism.Mvvm;
+using PrismContextAware.Services;
+using PrismContextAware.Services.Contracts;
 using System;
 using System.Globalization;
 using System.Reflection;
@@ -19,7 +21,8 @@ namespace PrismContextAware
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-
+            containerRegistry.Register<IViewAwareStatus, ViewAwareStatusService>();
+            containerRegistry.Register<IWindowAwareStatus, WindowAwareStatusService>();
         }
 
         protected override void ConfigureViewModelLocator()
@@ -37,10 +40,23 @@ namespace PrismContextAware
             ViewModelLocationProvider.SetDefaultViewModelFactory((view, type) =>
             {
                 object vm = ContainerLocator.Container.Resolve(type);
-                if (vm is IContextAware contextViewModel)
+
+                if (vm is IViewAwareStatusInjectionAware contextViewModel)
                 {
-                    contextViewModel.InjectContext(view);
+                    ViewAwareStatusService service = new ViewAwareStatusService();
+                    service.InjectContext(view);
+                    contextViewModel.InitialiseViewAwareService(service);
+                    return vm;
                 }
+
+                if (vm is IWindowAwareStatusInjectionAware contextWindowModel)
+                {
+                    WindowAwareStatusService service = new WindowAwareStatusService();
+                    service.InjectContext(view);
+                    contextWindowModel.InitialiseViewAwareService(service);
+                    return vm;
+                }
+
                 return vm;
             });
         }
