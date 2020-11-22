@@ -13,10 +13,7 @@ namespace PrismContextAware.Services
     ///    Activated / Deactivated
     ///    WindowClosed / WindowContentRendered / 
     ///    WindowLocationChanged / WindowStateChanged
-    /// 3. Windows current Dispatcher
-    /// 4. If the window implements <c>IViewCreationContextProvider</c>
-    ///    the current Views Context will also be available to allow
-    ///    the ViewModel to obtain some view specific contextual information
+    /// Windows current Dispatcher
     /// </summary>
     public class WindowAwareStatusService : ViewAwareStatusService, IWindowAwareStatus
     {

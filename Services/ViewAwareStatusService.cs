@@ -7,12 +7,9 @@ using System.Windows.Threading;
 namespace PrismContextAware.Services
 {
     /// <summary>
-    /// View aware service that provides the following
-    /// 1. Events for Loaded / Unloaded    
-    /// 2. Views current Dispatcher
-    /// 4. If the view implements <c>IViewCreationContextProvider</c>
-    ///    the current Views Context will also be available to allow
-    ///    the ViewModel to obtain some view specific contextual information
+    /// View aware service that provides the following Events.
+    /// - Loaded / Unloaded    
+    /// Views current Dispatcher
     /// </summary>
     public class ViewAwareStatusService : IViewAwareStatus
     {
@@ -85,8 +82,7 @@ namespace PrismContextAware.Services
             {
                 contextElement.Loaded += OnViewLoaded;
                 contextElement.Unloaded += OnViewUnloaded;
-
-                //get the Views Dispatcher
+                
                 Dispatcher = contextElement.Dispatcher;
                 _weakViewInstance = new WeakReference(contextElement);
             }
