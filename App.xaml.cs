@@ -1,7 +1,9 @@
-﻿using Prism.Ioc;
+﻿using DryIoc;
+using Prism.Ioc;
 using Prism.Mvvm;
 using PrismContextAware.Services;
 using PrismContextAware.Services.Contracts;
+using PrismContextAware.Views;
 using System;
 using System.Globalization;
 using System.Reflection;
@@ -23,6 +25,9 @@ namespace PrismContextAware
         {
             containerRegistry.Register<IViewAwareStatus, ViewAwareStatusService>();
             containerRegistry.Register<IWindowAwareStatus, WindowAwareStatusService>();
+
+            containerRegistry.RegisterForNavigation<ViewA>();
+            containerRegistry.RegisterForNavigation<ViewB>();
         }
 
         protected override void ConfigureViewModelLocator()

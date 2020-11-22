@@ -2,15 +2,15 @@
 
 namespace PrismContextAware.ViewModels
 {
-    public class ViewAViewModel : ViewAwareStatusViewModel
+    public class ViewBViewModel : ViewAwareStatusViewModel
     {
         protected override void OnLoaded()
         {
-            Debug.WriteLine($"OnLoaded ViewA");
+            Debug.WriteLine($"OnLoaded ViewB");
         }
         protected override void OnUnloaded()
         {
-            Debug.WriteLine($"OnUnloaded ViewA");
+            Debug.WriteLine($"OnUnloaded ViewB");
         }
     }
 }

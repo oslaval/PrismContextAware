@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="PrismContextAware.Views.ViewA"
+    x:Class="PrismContextAware.Views.ViewB"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -11,6 +11,7 @@
     mc:Ignorable="d">
 
     <Grid>
-        <TextBlock Text="ViewA" FontSize="48" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <TextBlock Text="ViewB" FontSize="48" HorizontalAlignment="Center" VerticalAlignment="Center" />
     </Grid>
 </UserControl>
+
