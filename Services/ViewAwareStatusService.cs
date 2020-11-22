@@ -17,7 +17,7 @@ namespace PrismContextAware.Services
     public class ViewAwareStatusService : IViewAwareStatus
     {
         #region Data
-        private WeakReference _weakViewInstance;
+        private WeakReference? _weakViewInstance;
         #endregion
 
         #region IViewAwareStatus Members
@@ -48,15 +48,15 @@ namespace PrismContextAware.Services
             }
         }
 
-        public Dispatcher Dispatcher { get; private set; }
+        public Dispatcher? Dispatcher { get; private set; }
 
-        public object Context { get { return _weakViewInstance.Target; } }
+        public object? Context { get { return _weakViewInstance?.Target; } }
 
         #endregion
 
         #region IContextAware Members
 
-        public void InjectContext(object context)
+        public virtual void InjectContext(object context)
         {
             if (_weakViewInstance != null)
             {
@@ -96,19 +96,19 @@ namespace PrismContextAware.Services
 
         #region Private Helpers
 
-        private void OnViewLoaded(object sender, RoutedEventArgs e)
+        private void OnViewLoaded(object? sender, RoutedEventArgs e)
         {
             foreach (WeakAction loadedHandler in _loadedHandlers)
             {
-                loadedHandler.GetMethod().DynamicInvoke();
+                loadedHandler?.GetMethod()?.DynamicInvoke();
             }
         }
 
-        private void OnViewUnloaded(object sender, RoutedEventArgs e)
+        private void OnViewUnloaded(object? sender, RoutedEventArgs e)
         {
             foreach (WeakAction unloadedHandler in _unloadedHandlers)
             {
-                unloadedHandler.GetMethod().DynamicInvoke();
+                unloadedHandler?.GetMethod()?.DynamicInvoke();
             }
         }
 

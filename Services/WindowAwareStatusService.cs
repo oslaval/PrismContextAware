@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
-using System.Windows.Threading;
 
 namespace PrismContextAware.Services
 {
@@ -19,39 +18,39 @@ namespace PrismContextAware.Services
     ///    the current Views Context will also be available to allow
     ///    the ViewModel to obtain some view specific contextual information
     /// </summary>
-    public class WindowAwareStatusService : IWindowAwareStatus
+    public class WindowAwareStatusService : ViewAwareStatusService, IWindowAwareStatus
     {
         #region Data
-        private WeakReference _weakInstance;
+        private WeakReference? _weakInstance;
         #endregion
 
         #region IWindowAwareStatus Members
 
-        private readonly IList<WeakAction> _loadedHandlers = new List<WeakAction>();
-        public event Action Loaded
-        {
-            add
-            {
-                _loadedHandlers.Add(new WeakAction(value.Target, value.Method, typeof(Action)));
-            }
-            remove
-            {
+        //private readonly IList<WeakAction?> _loadedHandlers = new List<WeakAction?>();
+        //public event Action Loaded
+        //{
+        //    add
+        //    {
+        //        _loadedHandlers.Add(new WeakAction(value.Target, value.Method, typeof(Action)));
+        //    }
+        //    remove
+        //    {
 
-            }
-        }
+        //    }
+        //}
 
-        private readonly IList<WeakAction> _unloadedHandlers = new List<WeakAction>();
-        public event Action Unloaded
-        {
-            add
-            {
-                _unloadedHandlers.Add(new WeakAction(value.Target, value.Method, typeof(Action)));
-            }
-            remove
-            {
+        //private readonly IList<WeakAction> _unloadedHandlers = new List<WeakAction>();
+        //public event Action Unloaded
+        //{
+        //    add
+        //    {
+        //        _unloadedHandlers.Add(new WeakAction(value.Target, value.Method, typeof(Action)));
+        //    }
+        //    remove
+        //    {
 
-            }
-        }
+        //    }
+        //}
 
         private readonly IList<WeakAction> _activatedHandlers = new List<WeakAction>();
         public event Action Activated
@@ -144,15 +143,15 @@ namespace PrismContextAware.Services
             }
         }
 
-        public Dispatcher Dispatcher { get; private set; }
+        //public Dispatcher Dispatcher { get; private set; }
 
-        public object Context { get { return _weakInstance.Target; } }
+        //public object Context { get { return _weakInstance.Target; } }
 
         #endregion
 
         #region IContextAware Members
-
-        public void InjectContext(object context)
+        
+        public override void InjectContext(object context)
         {
             if (_weakInstance != null)
             {
@@ -161,6 +160,8 @@ namespace PrismContextAware.Services
                     return;
                 }
             }
+
+            base.InjectContext(context);
 
             // unregister before hooking new events
             if (_weakInstance != null && _weakInstance.Target != null)
@@ -171,8 +172,8 @@ namespace PrismContextAware.Services
                 {
                     if (target is Window targetWindow)
                     {
-                        targetWindow.Loaded -= OnViewLoaded;
-                        targetWindow.Unloaded -= OnViewUnloaded;
+                        //targetWindow.Loaded -= OnViewLoaded;
+                        //targetWindow.Unloaded -= OnViewUnloaded;
                         targetWindow.Activated -= OnViewActivated;
                         targetWindow.Deactivated -= OnViewDeactivated;
                         targetWindow.Closed -= OnViewWindowClosed;
@@ -186,8 +187,8 @@ namespace PrismContextAware.Services
 
             if (context is Window contextWindow)
             {
-                contextWindow.Loaded += OnViewLoaded;
-                contextWindow.Unloaded += OnViewUnloaded;
+                //contextWindow.Loaded += OnViewLoaded;
+                //contextWindow.Unloaded += OnViewUnloaded;
                 contextWindow.Activated += OnViewActivated;
                 contextWindow.Deactivated += OnViewDeactivated;
                 contextWindow.Closed += OnViewWindowClosed;
@@ -197,7 +198,7 @@ namespace PrismContextAware.Services
                 contextWindow.StateChanged += OnViewWindowStateChanged;
 
                 //get the Views Dispatcher
-                Dispatcher = contextWindow.Dispatcher;
+                //Dispatcher = contextWindow.Dispatcher;
                 _weakInstance = new WeakReference(contextWindow);
             }
         }
@@ -205,44 +206,44 @@ namespace PrismContextAware.Services
 
         #region Private Helpers
 
-        private void OnViewLoaded(object sender, RoutedEventArgs e)
-        {
-            foreach (WeakAction loadedHandler in _loadedHandlers)
-            {
-                loadedHandler.GetMethod().DynamicInvoke();
-            }
-        }
+        //private void OnViewLoaded(object sender, RoutedEventArgs e)
+        //{
+        //    foreach (WeakAction loadedHandler in _loadedHandlers)
+        //    {
+        //        loadedHandler.GetMethod().DynamicInvoke();
+        //    }
+        //}
 
-        private void OnViewUnloaded(object sender, RoutedEventArgs e)
-        {
-            foreach (WeakAction unloadedHandler in _unloadedHandlers)
-            {
-                unloadedHandler.GetMethod().DynamicInvoke();
-            }
-        }
+        //private void OnViewUnloaded(object sender, RoutedEventArgs e)
+        //{
+        //    foreach (WeakAction unloadedHandler in _unloadedHandlers)
+        //    {
+        //        unloadedHandler.GetMethod().DynamicInvoke();
+        //    }
+        //}
 
-        private void OnViewActivated(object sender, EventArgs e)
+        private void OnViewActivated(object? sender, EventArgs e)
         {
             foreach (WeakAction activatedHandler in _activatedHandlers)
             {
-                activatedHandler.GetMethod().DynamicInvoke();
+                activatedHandler?.GetMethod()?.DynamicInvoke();
             }
 
         }
 
-        private void OnViewDeactivated(object sender, EventArgs e)
+        private void OnViewDeactivated(object? sender, EventArgs e)
         {
             foreach (WeakAction deactivatedHandler in _deactivatedHandlers)
             {
-                deactivatedHandler.GetMethod().DynamicInvoke();
+                deactivatedHandler?.GetMethod()?.DynamicInvoke();
             }
         }
 
-        private void OnViewWindowClosed(object sender, EventArgs e)
+        private void OnViewWindowClosed(object? sender, EventArgs e)
         {
             foreach (WeakAction closedHandler in _closedHandlers)
             {
-                closedHandler.GetMethod().DynamicInvoke();
+                closedHandler?.GetMethod()?.DynamicInvoke();
             }
         }
 
@@ -251,27 +252,27 @@ namespace PrismContextAware.Services
             _viewWindowClosingEvent.Raise(this, e);
         }
 
-        private void OnViewWindowContentRendered(object sender, EventArgs e)
+        private void OnViewWindowContentRendered(object? sender, EventArgs e)
         {
             foreach (WeakAction contentRenderedHandler in _contentRenderedHandlers)
             {
-                contentRenderedHandler.GetMethod().DynamicInvoke();
+                contentRenderedHandler?.GetMethod()?.DynamicInvoke();
             }
         }
 
-        private void OnViewWindowLocationChanged(object sender, EventArgs e)
+        private void OnViewWindowLocationChanged(object? sender, EventArgs e)
         {
             foreach (WeakAction locationChangedHandler in _locationChangedHandlers)
             {
-                locationChangedHandler.GetMethod().DynamicInvoke();
+                locationChangedHandler?.GetMethod()?.DynamicInvoke();
             }
         }
 
-        private void OnViewWindowStateChanged(object sender, EventArgs e)
+        private void OnViewWindowStateChanged(object? sender, EventArgs e)
         {
             foreach (WeakAction stateChangedHandler in _stateChangedHandlers)
             {
-                stateChangedHandler.GetMethod().DynamicInvoke();
+                stateChangedHandler?.GetMethod()?.DynamicInvoke();
             }
         }
         #endregion

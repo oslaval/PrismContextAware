@@ -11,13 +11,13 @@ namespace PrismContextAware.Services
     public class WeakAction
     {
         #region Data
-        private readonly WeakReference _target;
-        private readonly Type _ownerType;
+        private readonly WeakReference? _target;
+        private readonly Type? _ownerType;
         private readonly string _methodName;
         #endregion
 
         #region Public Properties/Methods
-        public WeakAction(object target, MethodBase mi, Type actionType)
+        public WeakAction(object? target, MethodBase mi, Type actionType)
         {
             if (target == null)
             {
@@ -42,7 +42,7 @@ namespace PrismContextAware.Services
 
         public bool HasBeenCollected { get { return _ownerType == null && (_target == null || !_target.IsAlive); } }
 
-        public Delegate GetMethod()
+        public Delegate? GetMethod()
         {
             if (_ownerType != null)
             {
@@ -51,7 +51,7 @@ namespace PrismContextAware.Services
 
             if (_target != null && _target.IsAlive)
             {
-                object target = _target.Target;
+                object? target = _target.Target;
                 if (target != null)
                 {
                     return Delegate.CreateDelegate(ActionType, target, _methodName);

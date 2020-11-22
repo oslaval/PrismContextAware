@@ -29,10 +29,10 @@ namespace PrismContextAware
         {
             ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver((viewType) =>
             {
-                string viewName = viewType.FullName;
-                viewName = viewName.Replace(".Views.", ".ViewModels.");
-                string viewAssemblyName = viewType.GetTypeInfo().Assembly.FullName;
-                string suffix = viewName.EndsWith("View") | viewName.EndsWith("Window") ? "Model" : "ViewModel";
+                string? viewName = viewType.FullName;                
+                viewName = viewName?.Replace(".Views.", ".ViewModels.");
+                string? viewAssemblyName = viewType.GetTypeInfo().Assembly.FullName;                                              
+                string? suffix = viewName!=null && (viewName.EndsWith("View") | viewName.EndsWith("Window")) ? "Model" : "ViewModel";                
                 string viewModelName = string.Format(CultureInfo.InvariantCulture, "{0}{1}, {2}", viewName, suffix, viewAssemblyName);
                 return Type.GetType(viewModelName);
             });

@@ -5,7 +5,7 @@ namespace PrismContextAware.Services.Contracts
 {
     public interface IViewAwareStatus : IContextAware
     {
-        Dispatcher Dispatcher { get; }
+        Dispatcher? Dispatcher { get; }
 
         event Action Loaded;
         event Action Unloaded;

@@ -7,6 +7,6 @@
     {
         void InjectContext(object context);
 
-        object Context { get; }
+        object? Context { get; }
     }
 }

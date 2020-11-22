@@ -13,8 +13,14 @@ namespace PrismContextAware
 
         public void InitialiseWindowAwareService(IWindowAwareStatus window)
         {
+            window.Loaded += Window_Loaded;
             window.Activated += Window_Activated;
-            window.WindowClosing += Window_WindowClosing;
+            window.WindowClosing += Window_WindowClosing; ;
+        }
+
+        private void Window_Loaded()
+        {
+            
         }
 
         private void Window_Activated()
@@ -22,7 +28,7 @@ namespace PrismContextAware
             
         }
 
-        private void Window_WindowClosing(object sender, CancelEventArgs e)
+        private void Window_WindowClosing(object? sender, CancelEventArgs e)
         {
             e.Cancel = MessageBox.Show("Exit ?", "ContextAware", MessageBoxButton.YesNo) == MessageBoxResult.No;
         }
