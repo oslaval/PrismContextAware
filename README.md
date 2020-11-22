@@ -28,20 +28,19 @@
         }
 
 
-    public class MainWindowModel : IWindowAwareStatusInjectionAware
-    {
-        public MainWindowModel()
+        public class MainWindowModel : IWindowAwareStatusInjectionAware
         {
+            public MainWindowModel()
+            {
+            }
 
-        }
+            public void InitialiseWindowAwareService(IWindowAwareStatus window)
+            {
+                window.WindowClosing += Window_WindowClosing;
+            }
 
-        public void InitialiseWindowAwareService(IWindowAwareStatus window)
-        {
-            window.WindowClosing += Window_WindowClosing;
+            private void Window_WindowClosing(object sender, CancelEventArgs e)
+            {
+                e.Cancel = MessageBox.Show("Exit ?", "ContextAware", MessageBoxButton.YesNo) == MessageBoxResult.No;
+            }
         }
-
-        private void Window_WindowClosing(object sender, CancelEventArgs e)
-        {
-            e.Cancel = MessageBox.Show("Exit ?", "ContextAware", MessageBoxButton.YesNo) == MessageBoxResult.No;
-        }
-    }
