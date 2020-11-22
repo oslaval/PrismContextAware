@@ -8,9 +8,8 @@ namespace PrismContextAware.Services
 {
     /// <summary>
     /// View aware service that provides the following
-    /// 1. Events for Loaded / Unloaded
-    /// 2. Events for Activated / Deactivated
-    /// 3. Views current Dispatcher
+    /// 1. Events for Loaded / Unloaded    
+    /// 2. Views current Dispatcher
     /// 4. If the view implements <c>IViewCreationContextProvider</c>
     ///    the current Views Context will also be available to allow
     ///    the ViewModel to obtain some view specific contextual information
@@ -49,32 +48,6 @@ namespace PrismContextAware.Services
             }
         }
 
-        private readonly IList<WeakAction> _activatedHandlers = new List<WeakAction>();
-        public event Action Activated
-        {
-            add
-            {
-                _activatedHandlers.Add(new WeakAction(value.Target, value.Method, typeof(Action)));
-            }
-            remove
-            {
-
-            }
-        }
-
-        private readonly IList<WeakAction> _deactivatedHandlers = new List<WeakAction>();
-        public event Action Deactivated
-        {
-            add
-            {
-                _deactivatedHandlers.Add(new WeakAction(value.Target, value.Method, typeof(Action)));
-            }
-            remove
-            {
-
-            }
-        }
-
         public Dispatcher Dispatcher { get; private set; }
 
         public object Context { get { return _weakViewInstance.Target; } }
@@ -94,39 +67,28 @@ namespace PrismContextAware.Services
             }
 
             // unregister before hooking new events
-            if (_weakViewInstance != null && this._weakViewInstance.Target != null)
+            if (_weakViewInstance != null && _weakViewInstance.Target != null)
             {
-                object targ = _weakViewInstance.Target;
+                object target = _weakViewInstance.Target;
 
-                if (targ != null)
+                if (target != null)
                 {
-                    ((FrameworkElement)targ).Loaded -= OnViewLoaded;
-                    ((FrameworkElement)targ).Unloaded -= OnViewUnloaded;
-
-                    if (targ is Window w)
+                    if (target is FrameworkElement targetElement)
                     {
-                        w.Activated -= OnViewActivated;
-                        w.Deactivated -= OnViewDeactivated;
+                        targetElement.Loaded -= OnViewLoaded;
+                        targetElement.Unloaded -= OnViewUnloaded;
                     }
                 }
-
             }
 
-            if (context is FrameworkElement x)
+            if (context is FrameworkElement contextElement)
             {
-                x.Loaded += OnViewLoaded;
-                x.Unloaded += OnViewUnloaded;
-
-                if (x is Window w)
-                {
-                    w.Activated += OnViewActivated;
-                    w.Deactivated += OnViewDeactivated;
-                }
+                contextElement.Loaded += OnViewLoaded;
+                contextElement.Unloaded += OnViewUnloaded;
 
                 //get the Views Dispatcher
-                Dispatcher = x.Dispatcher;
-                _weakViewInstance = new WeakReference(x);
-
+                Dispatcher = contextElement.Dispatcher;
+                _weakViewInstance = new WeakReference(contextElement);
             }
         }
 
@@ -147,23 +109,6 @@ namespace PrismContextAware.Services
             foreach (WeakAction unloadedHandler in _unloadedHandlers)
             {
                 unloadedHandler.GetMethod().DynamicInvoke();
-            }
-        }
-
-        private void OnViewActivated(object sender, EventArgs e)
-        {
-            foreach (WeakAction activatedHandler in _activatedHandlers)
-            {
-                activatedHandler.GetMethod().DynamicInvoke();
-            }
-
-        }
-
-        private void OnViewDeactivated(object sender, EventArgs e)
-        {
-            foreach (WeakAction deactivatedHandler in _deactivatedHandlers)
-            {
-                deactivatedHandler.GetMethod().DynamicInvoke();
             }
         }
 

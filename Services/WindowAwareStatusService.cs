@@ -165,47 +165,40 @@ namespace PrismContextAware.Services
             // unregister before hooking new events
             if (_weakInstance != null && _weakInstance.Target != null)
             {
-                object targ = _weakInstance.Target;
+                object target = _weakInstance.Target;
 
-                if (targ != null)
+                if (target != null)
                 {
-                    ((FrameworkElement)_weakInstance.Target).Loaded -= OnViewLoaded;
-                    ((FrameworkElement)_weakInstance.Target).Unloaded -= OnViewUnloaded;
-                    ((Window)_weakInstance.Target).Closed -= OnViewWindowClosed;
-                    ((Window)_weakInstance.Target).Closing -= OnViewWindowClosing;
-                    ((Window)_weakInstance.Target).ContentRendered -= OnViewWindowContentRendered;
-                    ((Window)_weakInstance.Target).LocationChanged -= OnViewWindowLocationChanged;
-                    ((Window)_weakInstance.Target).StateChanged -= OnViewWindowStateChanged;
-
-                    if (targ is Window w)
+                    if (target is Window targetWindow)
                     {
-                        w.Activated -= OnViewActivated;
-                        w.Deactivated -= OnViewDeactivated;
+                        targetWindow.Loaded -= OnViewLoaded;
+                        targetWindow.Unloaded -= OnViewUnloaded;
+                        targetWindow.Activated -= OnViewActivated;
+                        targetWindow.Deactivated -= OnViewDeactivated;
+                        targetWindow.Closed -= OnViewWindowClosed;
+                        targetWindow.Closing -= OnViewWindowClosing;
+                        targetWindow.ContentRendered -= OnViewWindowContentRendered;
+                        targetWindow.LocationChanged -= OnViewWindowLocationChanged;
+                        targetWindow.StateChanged -= OnViewWindowStateChanged;
                     }
                 }
-
             }
 
-            if (context is FrameworkElement x)
+            if (context is Window contextWindow)
             {
-                x.Loaded += OnViewLoaded;
-                x.Unloaded += OnViewUnloaded;
-
-                if (x is Window w)
-                {
-                    w.Activated += OnViewActivated;
-                    w.Deactivated += OnViewDeactivated;
-                    w.Closed += OnViewWindowClosed;
-                    w.Closing += OnViewWindowClosing;
-                    w.ContentRendered += OnViewWindowContentRendered;
-                    w.LocationChanged += OnViewWindowLocationChanged;
-                    w.StateChanged += OnViewWindowStateChanged;
-                }
+                contextWindow.Loaded += OnViewLoaded;
+                contextWindow.Unloaded += OnViewUnloaded;
+                contextWindow.Activated += OnViewActivated;
+                contextWindow.Deactivated += OnViewDeactivated;
+                contextWindow.Closed += OnViewWindowClosed;
+                contextWindow.Closing += OnViewWindowClosing;
+                contextWindow.ContentRendered += OnViewWindowContentRendered;
+                contextWindow.LocationChanged += OnViewWindowLocationChanged;
+                contextWindow.StateChanged += OnViewWindowStateChanged;
 
                 //get the Views Dispatcher
-                Dispatcher = x.Dispatcher;
-                _weakInstance = new WeakReference(x);
-
+                Dispatcher = contextWindow.Dispatcher;
+                _weakInstance = new WeakReference(contextWindow);
             }
         }
         #endregion

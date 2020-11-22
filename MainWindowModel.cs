@@ -13,7 +13,13 @@ namespace PrismContextAware
 
         public void InitialiseWindowAwareService(IWindowAwareStatus window)
         {
+            window.Activated += Window_Activated;
             window.WindowClosing += Window_WindowClosing;
+        }
+
+        private void Window_Activated()
+        {
+            
         }
 
         private void Window_WindowClosing(object sender, CancelEventArgs e)

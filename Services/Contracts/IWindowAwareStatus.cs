@@ -5,6 +5,8 @@ namespace PrismContextAware.Services.Contracts
 {
     public interface IWindowAwareStatus : IViewAwareStatus
     {
+        event Action Activated;
+        event Action Deactivated;
         event Action WindowClosed;
         event Action WindowContentRendered;
         event Action WindowLocationChanged;

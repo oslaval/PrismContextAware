@@ -9,7 +9,5 @@ namespace PrismContextAware.Services.Contracts
 
         event Action Loaded;
         event Action Unloaded;
-        event Action Activated;
-        event Action Deactivated;
     }
 }
