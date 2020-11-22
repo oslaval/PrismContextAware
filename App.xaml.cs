@@ -48,7 +48,7 @@ namespace PrismContextAware
 
                 if (vm is IViewAwareStatusInjectionAware contextViewModel)
                 {
-                    ViewAwareStatusService service = new ViewAwareStatusService();
+                    IViewAwareStatus service = ContainerLocator.Container.Resolve<IViewAwareStatus>();
                     service.InjectContext(view);
                     contextViewModel.InitialiseViewAwareService(service);
                     return vm;
@@ -56,7 +56,7 @@ namespace PrismContextAware
 
                 if (vm is IWindowAwareStatusInjectionAware contextWindowModel)
                 {
-                    WindowAwareStatusService service = new WindowAwareStatusService();
+                    IWindowAwareStatus service = ContainerLocator.Container.Resolve<IWindowAwareStatus>();
                     service.InjectContext(view);
                     contextWindowModel.InitialiseWindowAwareService(service);
                     return vm;
