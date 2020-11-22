@@ -23,32 +23,6 @@ namespace PrismContextAware.Services
 
         #region IWindowAwareStatus Members
 
-        //private readonly IList<WeakAction?> _loadedHandlers = new List<WeakAction?>();
-        //public event Action Loaded
-        //{
-        //    add
-        //    {
-        //        _loadedHandlers.Add(new WeakAction(value.Target, value.Method, typeof(Action)));
-        //    }
-        //    remove
-        //    {
-
-        //    }
-        //}
-
-        //private readonly IList<WeakAction> _unloadedHandlers = new List<WeakAction>();
-        //public event Action Unloaded
-        //{
-        //    add
-        //    {
-        //        _unloadedHandlers.Add(new WeakAction(value.Target, value.Method, typeof(Action)));
-        //    }
-        //    remove
-        //    {
-
-        //    }
-        //}
-
         private readonly IList<WeakAction> _activatedHandlers = new List<WeakAction>();
         public event Action Activated
         {
@@ -140,25 +114,21 @@ namespace PrismContextAware.Services
             }
         }
 
-        //public Dispatcher Dispatcher { get; private set; }
-
-        //public object Context { get { return _weakInstance.Target; } }
-
         #endregion
 
         #region IContextAware Members
         
         public override void InjectContext(object context)
         {
+            base.InjectContext(context);
+
             if (_weakInstance != null)
             {
                 if (_weakInstance.Target == context)
                 {
                     return;
                 }
-            }
-
-            base.InjectContext(context);
+            }            
 
             // unregister before hooking new events
             if (_weakInstance != null && _weakInstance.Target != null)
@@ -169,8 +139,6 @@ namespace PrismContextAware.Services
                 {
                     if (target is Window targetWindow)
                     {
-                        //targetWindow.Loaded -= OnViewLoaded;
-                        //targetWindow.Unloaded -= OnViewUnloaded;
                         targetWindow.Activated -= OnViewActivated;
                         targetWindow.Deactivated -= OnViewDeactivated;
                         targetWindow.Closed -= OnViewWindowClosed;
@@ -184,8 +152,6 @@ namespace PrismContextAware.Services
 
             if (context is Window contextWindow)
             {
-                //contextWindow.Loaded += OnViewLoaded;
-                //contextWindow.Unloaded += OnViewUnloaded;
                 contextWindow.Activated += OnViewActivated;
                 contextWindow.Deactivated += OnViewDeactivated;
                 contextWindow.Closed += OnViewWindowClosed;
@@ -194,30 +160,12 @@ namespace PrismContextAware.Services
                 contextWindow.LocationChanged += OnViewWindowLocationChanged;
                 contextWindow.StateChanged += OnViewWindowStateChanged;
 
-                //get the Views Dispatcher
-                //Dispatcher = contextWindow.Dispatcher;
                 _weakInstance = new WeakReference(contextWindow);
             }
         }
         #endregion
 
         #region Private Helpers
-
-        //private void OnViewLoaded(object sender, RoutedEventArgs e)
-        //{
-        //    foreach (WeakAction loadedHandler in _loadedHandlers)
-        //    {
-        //        loadedHandler.GetMethod().DynamicInvoke();
-        //    }
-        //}
-
-        //private void OnViewUnloaded(object sender, RoutedEventArgs e)
-        //{
-        //    foreach (WeakAction unloadedHandler in _unloadedHandlers)
-        //    {
-        //        unloadedHandler.GetMethod().DynamicInvoke();
-        //    }
-        //}
 
         private void OnViewActivated(object? sender, EventArgs e)
         {
